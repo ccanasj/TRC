@@ -1,0 +1,71 @@
+.App {
+  font-family: Arial;
+  height: 100vh;
+  width: 100vw;
+}
+
+.App-header {
+  font-size: calc(10px + 2vmin);
+}
+
+.naraja {
+  color: #c55a10;
+}
+
+.dark-naraja {
+  color: #94440c;
+}
+
+.light-naraja {
+  color: #d46312;
+}
+
+.grid {
+  width: 650px;
+  height: 650px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.square {
+  height: 200px;
+  width: 200px;
+  border: solid black 3px;
+}
+
+.mole {
+  background-image: url("../public/images/Kirbo.png");
+  background-size: cover;
+}
+
+.secret {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  animation-name: movement;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes movement {
+  0% {
+    left: 0px;
+    top: 0px;
+  }
+  25% {
+    left: 50%;
+    top: 50%;
+  }
+  50% {
+    left: 100%;
+    top: 100%;
+  }
+  75% {
+    left: 50%;
+    top: 50%;
+  }
+  100% {
+    left: 0px;
+    top: 0px;
+  }
+}
