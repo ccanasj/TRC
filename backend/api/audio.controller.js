@@ -16,7 +16,7 @@ export default class audio {
 
                     res.json(basic.player_response.videoDetails)
                 } else {
-                    res.status(400).json({ message: "El video no puede ser en vivo, debe ser mayor a 30 segundos y menor a 10 minutos" })
+                    res.status(400).json({ message: "El video no puede ser en vivo, debe ser mayor a 40 segundos y menor a 10 minutos" })
                 }
             } else {
                 res.status(400).json({ message: "Url invalida" })

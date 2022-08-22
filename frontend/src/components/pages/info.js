@@ -123,8 +123,8 @@ function Info() {
 
   function getImage(e) {
     const file = e.target.files[0]
-    if (file.size / 1024 / 1024 > 2) {
-      setAlertMessage('La imagen debe pesar menos de 2 mb')
+    if (file.size / 1024 / 1024 > 3) {
+      setAlertMessage('La imagen debe pesar menos de 3 mb')
       setOpen(true)
     } else {
       const reader = new FileReader()
@@ -154,12 +154,10 @@ function Info() {
   }
 
   return (
-    <Box sx={{ border: 10 }}>
-      {videoId ?
-        <Typography sx={{ color: "white" }}>
-          yrn
-        </Typography>
-        : null}
+    <Box sx={{ border: 10, borderTop: 0, borderBottom: 0 }}>
+      <Typography sx={{ color: "white" }}>
+        Codigo: "yrn"
+      </Typography>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert variant="filled" severity="error" onClose={handleClose} sx={{ mb: 2 }}>
           {alertMessage}
@@ -174,9 +172,9 @@ function Info() {
         noValidate
         color="#000000" sx={{ borderBottom: 10, margin: "1% auto", p: 1 }}>
         <h1 className="App-header">
-          Ingresa el link de la canción
+          Ingresa el link de youtube de la canción
         </h1>
-        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "80%" }} value={url} onChange={e => setUrl(e.target.value)} />
+        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} value={url} onChange={e => setUrl(e.target.value)} />
         <Button disabled={loading} variant="contained" sx={{ bgcolor: "#94440C" }} onClick={sendURL}>
           Enviar
         </Button>
@@ -200,11 +198,11 @@ function Info() {
                 </Grid>
                 <Grid container direction="row" item>
                   <Grid container border={3} xs alignItems="center" justifyContent="center" item direction="column" component="form" autoComplete="off" noValidate>
-                    <TextField disabled={loading} required margin="normal" label="Titulo" sx={{ bgcolor: "#ffffff", width: "50%" }} value={title} onChange={e => setTitle(e.target.value)} />
-                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: "50%" }} value={artist} onChange={e => setArtist(e.target.value)} />
-                    <TextField disabled={loading} margin="normal" label="Album" sx={{ bgcolor: "#ffffff", width: "50%" }} value={album} onChange={e => setAlbum(e.target.value)} />
+                    <TextField disabled={loading} required margin="normal" label="Titulo" sx={{ bgcolor: "#ffffff", width: "80%" }} value={title} onChange={e => setTitle(e.target.value)} />
+                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: "80%" }} value={artist} onChange={e => setArtist(e.target.value)} />
+                    <TextField disabled={loading} margin="normal" label="Album" sx={{ bgcolor: "#ffffff", width: "80%" }} value={album} onChange={e => setAlbum(e.target.value)} />
                   </Grid>
-                  <Grid item border={3} xs={3}>
+                  <Grid item border={3} xs={4}>
                     <Typography variant='h5' align="center">
                       Palabras clave
                     </Typography>
@@ -233,10 +231,10 @@ function Info() {
                   <Typography variant='h5' align="center">
                     Tiempo incio - duracion del audio
                   </Typography>
-                  <Typography variant='h6'>
+                  <Typography align="center" variant='h6'>
                     El audio incia en el segundo {seconds[0]}s
                   </Typography>
-                  <Box sx={{ width: "50%" }}>
+                  <Box sx={{ width: "80%" }}>
                     <Slider
                       getAriaLabel={() => 'Minimum distance'}
                       value={seconds}
@@ -248,7 +246,7 @@ function Info() {
                       disabled={loading}
                     />
                   </Box>
-                  <Typography variant='h6'>
+                  <Typography align="center" variant='h6'>
                     El audio tiene una duracion de {fancyTime(seconds[1] - seconds[0])}
                   </Typography>
                 </Grid>
@@ -298,14 +296,13 @@ function Info() {
                 <Typography variant='h5' align="center">
                   Album cover
                 </Typography>
-                <Grid border={3} margin={2} padding={2} justifyContent="space-evenly" alignItems="center" container item>
+                <Grid border={3} padding={2} sx={{ overflow: "hidden" }} justifyContent="space-evenly" alignItems="center" container item>
                   <Canvas image={image} onChange={setImage} />
                   <Button disabled={loading} variant="contained" component="label" >
                     Subir imagen de portada
                     <input hidden accept="image/*" type="file" onChange={getImage} />
                   </Button>
-                  O
-                  <TextField disabled={loading} label="Url imagen" margin="normal" sx={{ bgcolor: "#ffffff", width: "30%", height: "25%" }} onChange={e => setImage(e.target.value)} />
+                  <TextField disabled={loading} label="Url imagen" margin="normal" sx={{ bgcolor: "#ffffff", width: "80%" }} onChange={e => setImage(e.target.value)} />
                 </Grid>
               </AccordionDetails>
             </Accordion>
@@ -331,11 +328,11 @@ function Info() {
               <Typography variant='h6' align="center">
                 {value}
               </Typography>
-                <LinearProgress />
-            </Grid> : <></>
+              <LinearProgress />
+            </Grid> : null
           }
           <a ref={download} href={blob} download={`${title}.mp3`} style={{ visibility: "hidden" }}>No deverias de ver esto xddd</a>
-        </Grid> : <></>
+        </Grid> : null
       }
     </Box>
   );

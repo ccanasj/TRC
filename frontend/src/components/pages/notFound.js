@@ -55,7 +55,7 @@ function NotFound() {
                     left: "0px",
                     boxShadow: "inset 0 0 40px 2px #000, 0 0 20px 4px rgba(13,13,10,0.2)"
                 }}></div></div>
-            <div className="secret">yb</div>
+            <div className="secret">"yb"</div>
         </div >
     );
 }

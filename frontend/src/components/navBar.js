@@ -10,22 +10,22 @@ import { ReactComponent as Logo } from '../Logo.svg';
 
 function NavBar() {
   return (
-    <AppBar position="static" sx={{ bgcolor: "#C55A10" }}>
+    <AppBar position="static" sx={{ bgcolor: "#C55A10", border:10, borderColor: "black" }} >
       <Toolbar>
         <Grid container
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          padding={1}>
+          padding={1} >
           <Stack direction="row" alignItems="center" spacing={2}>
             <Link to={"/"}>
               <Logo width="64" height="64" />
             </Link>
-            <Typography href="/" variant='h6' component='div' sx={{ flexGrow: 1 }}>
+            <Typography variant='h6'>
               La robacion
             </Typography>
           </Stack>
-          <Stack direction="row" alignItems="center" spacing={2}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={2}>
             <Link style={{ textDecoration: 'none' }} to={"/edit"}>
               <Button sx={{ bgcolor: "#ffffff", color: "black" }}>Editar</Button>
             </Link>

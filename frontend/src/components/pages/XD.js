@@ -32,32 +32,32 @@ function XD() {
                     <Typography sx={{ textAlign: "center" }} variant='h5'>
                         1
                     </Typography>
-                    <TextField required margin="normal" helperText="Con un poco de suerte lo conseguiras" value={primero} onChange={e => setPrimero(e.target.value)} />
+                    <TextField required margin="normal" error={primero !== 'Chgb'} helperText="Con un poco de suerte lo conseguiras" value={primero} onChange={e => setPrimero(e.target.value)} />
                 </Grid>
 
                 <Grid item>
                     <Typography sx={{ textAlign: "center" }} variant='h5'>
                         2
                     </Typography>
-                    <TextField required margin="normal" helperText="Los kirbos escondidos esconden algo" value={segundo} onChange={e => setSegundo(e.target.value)} />
+                    <TextField required margin="normal" error={segundo !== 'ry'} helperText="Los kirbos escondidos esconden algo" value={segundo} onChange={e => setSegundo(e.target.value)} />
                 </Grid>
                 <Grid item>
                     <Typography sx={{ textAlign: "center" }} variant='h5'>
                         3
                     </Typography>
-                    <TextField required margin="normal" helperText="Toca al kirbo 50 veces y te dira un secreto" value={tercero} onChange={e => setTercero(e.target.value)} />
+                    <TextField required margin="normal" error={tercero !== 'dhr'} helperText="Toca al kirbo 50 veces y te dira un secreto" value={tercero} onChange={e => setTercero(e.target.value)} />
                 </Grid>
                 <Grid item>
                     <Typography sx={{ textAlign: "center" }} variant='h5'>
                         4
                     </Typography>
-                    <TextField required margin="normal" helperText="Oculto en la oscuridad" value={cuarto} onChange={e => setCuarto(e.target.value)} />
+                    <TextField required margin="normal" error={cuarto !== 'yb'} helperText="Oculto en la oscuridad" value={cuarto} onChange={e => setCuarto(e.target.value)} />
                 </Grid>
                 <Grid item>
                     <Typography sx={{ textAlign: "center" }} variant='h5'>
                         5
                     </Typography>
-                    <TextField required margin="normal" helperText="En el inicio, oculto de tus ojos" value={quinto} onChange={e => setQuinto(e.target.value)} />
+                    <TextField required margin="normal" error={quinto !== 'yrn'} helperText="En el inicio, oculto de tus ojos" value={quinto} onChange={e => setQuinto(e.target.value)} />
                 </Grid>
             </Grid >
             <Grid alignItems="center" justifyContent="center" container>

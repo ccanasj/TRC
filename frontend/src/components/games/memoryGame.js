@@ -103,16 +103,17 @@ const MemoryGame = props => {
     }, [])
 
     return (
-
-        <Grid padding={10} alignItems="center" justifyContent="center" container spacing={2} >
-            <Typography variant='h5'>
+        <Grid >
+            <Typography align="center" variant='h5'>
                 {message}
             </Typography>
-            {cards.map((val, key) => (
-                <Grid item>
-                    <img key={key} name={val.name} width={150} height={150} src={window.location.origin + "/images/blank.jpg"} alt={key} onClick={flipCard} />
-                </Grid>
-            ))}
+            <Grid padding={10} alignItems="center" justifyContent="center" container spacing={2} item>
+                {cards.map((val, key) => (
+                    <Grid item>
+                        <img key={key} name={val.name} width={150} height={150} src={window.location.origin + "/images/blank.jpg"} alt={key} onClick={flipCard} />
+                    </Grid>
+                ))}
+            </Grid>
         </Grid>
     );
 }

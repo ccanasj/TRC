@@ -7,6 +7,7 @@ import Info from "./components/pages/info";
 import Music from "./components/pages/music";
 import XD from "./components/pages/XD";
 import NavBar from "./components/navBar";
+import Footer from "./components/footer";
 import NotFound from "./components/pages/notFound";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/music" element={<Music />}></Route>
         <Route path="/XD" element={<XD />}></Route>
       </Routes>
+      <Footer />
     </div>
   );
 }
