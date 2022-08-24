@@ -12,11 +12,11 @@ export default class audio {
             if (ytdl.validateURL(videoUrl)) {
                 const basic = await ytdl.getBasicInfo(videoUrl);
 
-                if (!basic.player_response.videoDetails.isLiveContent && Number(basic.player_response.videoDetails.lengthSeconds) <= 600 && Number(basic.player_response.videoDetails.lengthSeconds) >= 40) {
+                if (!basic.player_response.videoDetails.isLiveContent && Number(basic.player_response.videoDetails.lengthSeconds) <= 600 && Number(basic.player_response.videoDetails.lengthSeconds) >= 30) {
 
                     res.json(basic.player_response.videoDetails)
                 } else {
-                    res.status(400).json({ message: "El video no puede ser en vivo, debe ser mayor a 40 segundos y menor a 10 minutos" })
+                    res.status(400).json({ message: "El video no puede ser en vivo, debe ser mayor a 30 segundos y menor a 10 minutos" })
                 }
             } else {
                 res.status(400).json({ message: "Url invalida" })
@@ -85,13 +85,13 @@ export default class audio {
     static async downloadWriter(req, res, next) {
         try {
             const videoUrl = req.body.id;
-            const download = ytdl(videoUrl, { quality: req.body.quality })
+            const download = ytdl(videoUrl, { quality: 'lowestaudio' });
 
-            const name = req.body.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()
+            const name = req.body.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
             const filename = `./audio/${name}.temp.mp3`;
 
-            const imageName = `./img/${name}.temp.jpeg`
+            const imageName = `./img/${name}.temp.jpeg`;
 
             fs.writeFile(imageName, req.body.image, { encoding: 'base64' }, (err) => {
                 if (err)
@@ -100,7 +100,7 @@ export default class audio {
                     const stream = ffmpeg(download).setFfmpegPath(FFmpegStatic)
                         .seekInput(req.body.seconds[0])
                         .audioFrequency(44100)
-                        .audioBitrate(128)
+                        .audioBitrate(req.body.quality)
                         .addInput(imageName)
                         .addOutputOptions(
                             '-map', '0', '-map', '1', '-c', 'copy',
@@ -111,10 +111,17 @@ export default class audio {
                         .format('mp3')
                         .duration(req.body.seconds[1] - req.body.seconds[0])
                         .save(filename);
-                    if (req.body.normLoud) {
-                        console.log('a')
-                        stream.audioFilter("loudnorm")
+                    const filters = []
+                    if(req.body.removeSilence){
+                        filters.push("silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-40dB")
                     }
+                    if (req.body.normLoud) {
+                        filters.push("loudnorm")
+                    }
+                    if(filters.length){
+                        stream.audioFilters(...filters)
+                    }
+                    
 
                     stream.on('end', () => {
                         res.sendFile(path.resolve(filename), err => {
@@ -144,6 +151,16 @@ export default class audio {
                             res.status(500).json({ message: "Ocurrio un error con el audio" });
                             download._destroy()
                             stream.kill()
+                            fs.unlink(path.resolve(filename), err => {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
+                            fs.unlink(path.resolve(imageName), err => {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
                         }
                     });
                 }

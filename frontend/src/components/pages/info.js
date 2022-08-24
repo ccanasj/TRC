@@ -19,6 +19,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 //import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import LinearProgress from '@mui/material/LinearProgress'
+import Stack from '@mui/material/Stack';
 
 import Canvas from "../Canvas.js";
 import Ruleta from "../games/ruleta.js";
@@ -36,11 +37,12 @@ function Info() {
   const [lengthSeconds, setLengthSeconds] = useState(0);
   const [seconds, setSeconds] = useState([0, 0]);
   const [videoId, setVideoId] = useState('');
-  const [quality, setQuality] = useState('highestaudio');
+  const [quality, setQuality] = useState('128');
   const [image, setImage] = useState('');
   const [keywords, setKeywords] = useState([]);
   const [blob, setBlob] = useState('');
   const [checked, setChecked] = useState(false);
+  const [removeSilence, setRemoveSilence] = useState(false);
   const [open, setOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -87,6 +89,7 @@ function Info() {
       seconds: seconds,
       quality: quality,
       normLoud: checked,
+      removeSilence: removeSilence,
       image: image.split(',')[1]
     };
 
@@ -100,10 +103,11 @@ function Info() {
       await sleep(500);
       download.current.click()
       await sleep(500);
+      URL.revokeObjectURL(objectURL);
       window.location.reload();
     })
       .catch(e => {
-        setAlertMessage('A ocurrido un error procesando el audio')
+        setAlertMessage('A ocurrido un error procesando el audio, vuelve a intentarlo')
         setOpen(true)
         setLoading(false)
         console.log(e);
@@ -203,7 +207,7 @@ function Info() {
                     <TextField disabled={loading} margin="normal" label="Album" sx={{ bgcolor: "#ffffff", width: "80%" }} value={album} onChange={e => setAlbum(e.target.value)} />
                   </Grid>
                   <Grid item border={3} xs={4}>
-                    <Typography variant='h5' align="center">
+                    <Typography variant='h6' align="center">
                       Palabras clave
                     </Typography>
                     <List style={{ maxHeight: 250, overflow: 'auto' }} >
@@ -250,48 +254,75 @@ function Info() {
                     El audio tiene una duracion de {fancyTime(seconds[1] - seconds[0])}
                   </Typography>
                 </Grid>
+                <Typography variant='h5' align="center">
+                  Calidad del audio
+                </Typography>
+                <Grid padding={2} container alignItems="center" justifyContent="space-between" item>
+                  <Stack>
+                    <Grid alignItems="center" container item>
+                      <Radio
+                        checked={quality === '192'}
+                        onChange={e => setQuality(e.target.value)}
+                        disabled={loading}
+                        value={'192'} />
+                      <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Entre mayor la calidad mejor se escuhara el audio pero  sera  mas pesado el archivo (Tarda mas en descargar)">
+                        <Typography>
+                          Mayor calidad
+                        </Typography>
+                      </Tooltip>
+                    </Grid>
+                    <Grid alignItems="center" container item>
+                      <Radio
+                        checked={quality === '128'}
+                        onChange={e => setQuality(e.target.value)}
+                        disabled={loading}
+                        value={'128'} />
+                      <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Entre mayor la calidad mejor se escuhara el audio pero  sera  mas pesado el archivo">
+                        <Typography>
+                          Calidad normal
+                        </Typography>
+                      </Tooltip>
+                    </Grid>
 
-                <Grid margin={2} item>
-                  <Typography variant='h5' align="center">
-                    Calidad del audio
-                  </Typography>
-                  <Grid alignItems="center" container item>
-                    <Radio
-                      checked={quality === 'highestaudio'}
-                      onChange={e => setQuality(e.target.value)}
-                      disabled={loading}
-                      value="highestaudio" />
-                    <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Entre mayor la calidad mejor se escuhara el audio pero  sera  mas pesado el archivo">
-                      <Typography>
-                        Mayor calidad
-                      </Typography>
-                    </Tooltip>
-                  </Grid>
-
-                  <Grid alignItems="center" container item>
-                    <Radio
-                      checked={quality === 'lowestaudio'}
-                      onChange={e => setQuality(e.target.value)}
-                      disabled={loading}
-                      value="lowestaudio" />
-                    <Tooltip disableFocusListener disableTouchListener arrow placement="right" title="Pues lo contrario al anterior boludo">
-                      <Typography>
-                        Menor calidad
-                      </Typography>
-                    </Tooltip>
-                  </Grid>
-                  <Grid alignItems="center" container item>
-                    <Checkbox
-                      checked={checked}
-                      onChange={e => setChecked(e.target.checked)}
-                      disabled={loading}
-                    />
-                    <Tooltip disableFocusListener disableTouchListener arrow placement="right" title="Ni yo lo entiendo xddd">
-                      <Typography>
-                        Normalizar ruido del audio
-                      </Typography>
-                    </Tooltip>
-                  </Grid>
+                    <Grid alignItems="center" container item>
+                      <Radio
+                        checked={quality === '64'}
+                        onChange={e => setQuality(e.target.value)}
+                        disabled={loading}
+                        value={'64'} />
+                      <Tooltip disableFocusListener disableTouchListener arrow placement="right" title="La menor calidad de audio, pero menos pesado">
+                        <Typography>
+                          Menor calidad
+                        </Typography>
+                      </Tooltip>
+                    </Grid>
+                  </Stack>
+                  <Stack>
+                    <Grid alignItems="center" container item>
+                      <Checkbox
+                        checked={removeSilence}
+                        onChange={e => setRemoveSilence(e.target.checked)}
+                        disabled={loading}
+                      />
+                      <Tooltip disableFocusListener disableTouchListener arrow placement="top" title="Remueve el silencio al incio de la cancion y al final (Tarda mas en descargar)">
+                        <Typography>
+                          Remover silencio al incio y final
+                        </Typography>
+                      </Tooltip>
+                    </Grid>
+                    <Grid alignItems="center" container item>
+                      <Checkbox
+                        checked={checked}
+                        onChange={e => setChecked(e.target.checked)}
+                        disabled={loading}
+                      />
+                      <Tooltip disableFocusListener disableTouchListener arrow placement="bottom" title="Reducira los sonidos fuertes (Tarda mas en descargar)">
+                        <Typography>
+                          Normalizar ruido del audio
+                        </Typography>
+                      </Tooltip>
+                    </Grid>
+                  </Stack>
                 </Grid>
                 <Typography variant='h5' align="center">
                   Album cover
@@ -334,7 +365,7 @@ function Info() {
           <a ref={download} href={blob} download={`${title}.mp3`} style={{ visibility: "hidden" }}>No deverias de ver esto xddd</a>
         </Grid> : null
       }
-    </Box>
+    </Box >
   );
 }
 

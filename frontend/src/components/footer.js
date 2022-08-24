@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
 import SvgIcon from '@mui/material/SvgIcon';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -8,8 +7,7 @@ import { ReactComponent as Logo } from '../Flamenco.svg';
 
 function Footer() {
     return (
-        <Grid position="static" sx={{ bgcolor: "#C55A10" }}
-            container
+        <Stack sx={{ bgcolor: "#C55A10" }}
             direction="row"
             justifyContent="space-between"
             alignItems="center"
@@ -30,7 +28,7 @@ function Footer() {
                     ©TRC
                 </Typography>
             </Stack>
-        </Grid>
+        </Stack>
     );
 }
 
