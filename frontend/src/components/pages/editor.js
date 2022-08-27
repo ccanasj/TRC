@@ -1,11 +1,15 @@
 import React from "react"
+import Box from '@mui/material/Box';
+
 import MemoryGame from "../games/memoryGame";
+import WIP from "../WIP";
 
 function Editor() {
   return (
-      <MemoryGame>
-
-      </MemoryGame>
+    <Box>
+      <WIP text="Proximamente se implementara un editor de metadata de MP3."/>
+      <MemoryGame />
+    </Box>
   );
 }
 

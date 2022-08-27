@@ -17,7 +17,7 @@ function NavBar() {
               <Logo width="82" height="82" />
             </Link>
             <Typography variant='h6'>
-              La robacion
+              T R C
             </Typography>
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} alignItems="center" spacing={2}>

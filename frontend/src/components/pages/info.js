@@ -16,17 +16,18 @@ import Alert from '@mui/material/Alert';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-//import IconButton from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import LinearProgress from '@mui/material/LinearProgress'
 import Stack from '@mui/material/Stack';
+// import Switch from '@mui/material/Switch';
 
 import Canvas from "../Canvas.js";
 import Ruleta from "../games/ruleta.js";
 import YoutubeAudio from "../../services/audio.js";
+import { ReactComponent as Paste } from '../../Paste.svg';
 
 const minDistance = 30;
-
 
 function Info() {
 
@@ -157,10 +158,30 @@ function Info() {
     await navigator.clipboard.writeText(e.target.innerText);
   }
 
+  function pasteImage(event) {
+    // use event.originalEvent.clipboard for newer chrome versions
+    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    // find pasted image among pasted items
+    var blob = null;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") === 0) {
+        blob = items[i].getAsFile();
+      }
+    }
+    // load image if there is a pasted image
+    if (blob !== null) {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        setImage(event.target.result) // data url!
+      };
+      reader.readAsDataURL(blob);
+    }
+  }
+
   return (
     <Box sx={{ border: 10, borderTop: 0, borderBottom: 0 }}>
       <Typography sx={{ color: "white" }}>
-        Codigo: "yrn"
+        Código: "yrn"
       </Typography>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert variant="filled" severity="error" onClose={handleClose} sx={{ mb: 2 }}>
@@ -175,10 +196,15 @@ function Info() {
         justifyContent="center"
         noValidate
         color="#000000" sx={{ borderBottom: 10, margin: "1% auto", p: 1 }}>
+
         <h1 className="App-header">
           Ingresa el link de youtube de la canción
         </h1>
-        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} value={url} onChange={e => setUrl(e.target.value)} />
+        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setUrl(await navigator.clipboard.readText())}><Paste /></IconButton>) }} value={url} onChange={e => setUrl(e.target.value)} />
+        {/* <Typography variant='h5'>
+          ¿Quieres poner metadatos a la canción? 
+        </Typography>
+        <Switch defaultChecked /> */}
         <Button disabled={loading} variant="contained" sx={{ bgcolor: "#94440C" }} onClick={sendURL}>
           Enviar
         </Button>
@@ -202,13 +228,13 @@ function Info() {
                 </Grid>
                 <Grid container direction="row" item>
                   <Grid container border={3} xs alignItems="center" justifyContent="center" item direction="column" component="form" autoComplete="off" noValidate>
-                    <TextField disabled={loading} required margin="normal" label="Titulo" sx={{ bgcolor: "#ffffff", width: "80%" }} value={title} onChange={e => setTitle(e.target.value)} />
-                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: "80%" }} value={artist} onChange={e => setArtist(e.target.value)} />
-                    <TextField disabled={loading} margin="normal" label="Album" sx={{ bgcolor: "#ffffff", width: "80%" }} value={album} onChange={e => setAlbum(e.target.value)} />
+                    <TextField disabled={loading} required margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: "80%" }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setTitle(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: "80%" }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setArtist(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: "80%" }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
                   </Grid>
                   <Grid item border={3} xs={4}>
                     <Typography variant='h6' align="center">
-                      Palabras clave
+                      Palabras clave (Dale click en el botón para copiar)
                     </Typography>
                     <List style={{ maxHeight: 250, overflow: 'auto' }} >
                       {keywords.map((value) => (
@@ -220,6 +246,11 @@ function Info() {
                       ))}
                     </List>
                   </Grid>
+                </Grid>
+                <Grid padding={1} container alignItems="center" justifyContent="center" item>
+                  <Button disabled={loading} href={`https://musicbrainz.org/search?query=${title}+${artist}&type=recording&limit=25&method=indexed`} target="_blank" variant="contained" sx={{ bgcolor: "#94440C", textTransform: "capitalize" }}>
+                    Buscar más información
+                  </Button>
                 </Grid>
               </AccordionDetails>
             </Accordion>
@@ -233,10 +264,10 @@ function Info() {
               <AccordionDetails>
                 <Grid container border={3} direction="column" alignItems="center" justifyContent="center" item>
                   <Typography variant='h5' align="center">
-                    Tiempo incio - duracion del audio
+                    Tiempo inicio - duración del audio
                   </Typography>
                   <Typography align="center" variant='h6'>
-                    El audio incia en el segundo {seconds[0]}s
+                    El audio inicia en el segundo {seconds[0]}s
                   </Typography>
                   <Box sx={{ width: "80%" }}>
                     <Slider
@@ -251,7 +282,7 @@ function Info() {
                     />
                   </Box>
                   <Typography align="center" variant='h6'>
-                    El audio tiene una duracion de {fancyTime(seconds[1] - seconds[0])}
+                    El audio tiene una duración de {fancyTime(seconds[1] - seconds[0])}
                   </Typography>
                 </Grid>
                 <Typography variant='h5' align="center">
@@ -265,9 +296,9 @@ function Info() {
                         onChange={e => setQuality(e.target.value)}
                         disabled={loading}
                         value={'192'} />
-                      <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Entre mayor la calidad mejor se escuhara el audio pero  sera  mas pesado el archivo (Tarda mas en descargar)">
+                      <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Entre mayor la calidad mejor se escuchara el audio pero sera mas pesado el archivo (Tarda más en descargar)">
                         <Typography>
-                          Mayor calidad
+                          Mayor calidad (192kbs)
                         </Typography>
                       </Tooltip>
                     </Grid>
@@ -277,9 +308,9 @@ function Info() {
                         onChange={e => setQuality(e.target.value)}
                         disabled={loading}
                         value={'128'} />
-                      <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Entre mayor la calidad mejor se escuhara el audio pero  sera  mas pesado el archivo">
+                      <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Calidad normal">
                         <Typography>
-                          Calidad normal
+                          Calidad normal (128kbs)
                         </Typography>
                       </Tooltip>
                     </Grid>
@@ -292,7 +323,7 @@ function Info() {
                         value={'64'} />
                       <Tooltip disableFocusListener disableTouchListener arrow placement="right" title="La menor calidad de audio, pero menos pesado">
                         <Typography>
-                          Menor calidad
+                          Menor calidad (64kbs)
                         </Typography>
                       </Tooltip>
                     </Grid>
@@ -304,7 +335,7 @@ function Info() {
                         onChange={e => setRemoveSilence(e.target.checked)}
                         disabled={loading}
                       />
-                      <Tooltip disableFocusListener disableTouchListener arrow placement="top" title="Remueve el silencio al incio de la cancion y al final (Tarda mas en descargar)">
+                      <Tooltip disableFocusListener disableTouchListener arrow placement="top" title="Remueve el silencio que sea menor a -40db al incio de la canción y al final (Tarda mas en descargar)">
                         <Typography>
                           Remover silencio al incio y final
                         </Typography>
@@ -325,15 +356,15 @@ function Info() {
                   </Stack>
                 </Grid>
                 <Typography variant='h5' align="center">
-                  Album cover
+                  Álbum cover
                 </Typography>
-                <Grid border={3} padding={2} sx={{ overflow: "hidden" }} justifyContent="space-evenly" alignItems="center" container item>
+                <Grid border={3} padding={2} sx={{ overflow: "hidden" }} justifyContent="space-evenly" alignItems="center" container item onPaste={pasteImage}>
                   <Canvas image={image} onChange={setImage} />
                   <Button disabled={loading} variant="contained" component="label" >
                     Subir imagen de portada
                     <input hidden accept="image/*" type="file" onChange={getImage} />
                   </Button>
-                  <TextField disabled={loading} label="Url imagen" margin="normal" sx={{ bgcolor: "#ffffff", width: "80%" }} onChange={e => setImage(e.target.value)} />
+                  <TextField disabled={loading} label="Url imagen o pega aqui la imagen copiada" margin="normal" sx={{ bgcolor: "#ffffff", width: "80%" }} onChange={e => setImage(e.target.value)} />
                 </Grid>
               </AccordionDetails>
             </Accordion>
@@ -354,12 +385,12 @@ function Info() {
             </Button>
           </Grid>
           {loading ?
-            <Grid sx={{ width: '80%' }} item>
+            <Grid sx={{ width: '80%', color: '#d46312' }} item>
               {wheel ? <Ruleta></Ruleta> : null}
               <Typography variant='h6' align="center">
                 {value}
               </Typography>
-              <LinearProgress />
+              <LinearProgress color="inherit" />
             </Grid> : null
           }
           <a ref={download} href={blob} download={`${title}.mp3`} style={{ visibility: "hidden" }}>No deverias de ver esto xddd</a>

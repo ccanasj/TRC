@@ -1,7 +1,6 @@
 import ytdl from "ytdl-core";
 import fs from "fs";
 import FFmpegStatic from "ffmpeg-static";
-import childProcess from "child_process";
 import ffmpeg from 'fluent-ffmpeg';
 import path from "path";
 
@@ -32,53 +31,14 @@ export default class audio {
         try {
             const videoUrl = req.body.url;
             const download = ytdl(videoUrl, { quality: 'lowestaudio' })
-            let ffmpeg = childProcess.spawn(FFmpegStatic, [
-                //'-y', '-v', 'error',
-                //'-ss', '0',
-                '-i', 'pipe:0',
-                // '-i', 'Kirb.png',
-                // '-map', '0',
-                // '-map', '1',
-                // '-c:v', 'copy',
-                // '-id3v2_version', '3',
-                // '-metadata', 'title="Holi"',
-                // '-metadata', 'artist="Someone"',
-                // '-metadata', 'album="Si"',
-                // '-acodec', 'mp3',
-                // "-f", "mp3",
-                // '-metadata:s:v', 'title="Album cover"',
-                // '-metadata:s:v', 'comment="Cover (front)"',
-                //'-t', '10',
-                //'-filter:a', "volume=-14dB",
-                //'-filter:a', "loudnorm",
-                // 'pipe:1'
-            ]);
-
-            download.pipe(ffmpeg.stdin);
 
             res.writeHead(206, { 'Accept-Ranges': 'bytes', 'Content-Type': 'audio/mp3' })
-            //ffmpeg.stdout.pipe(res);
-            // ffmpeg.on('close', () => {
-            //     console.log("Acabe xd");
-            //     res.json({ message: "Melisimo" })
-            // })
 
-            ffmpeg.stdout.pipe(res);
-
-            //error logging
-            ffmpeg.stderr.setEncoding('utf8');
-            ffmpeg.stderr.on('data', (data) => {
-                console.log(data);
-            });
-
-            res.on("close", () => { ffmpeg.kill(); });
-
-            // const writeStream = fs.createWriteStream('./test.mp3');
-            // download.pipe(writeStream);
+            download.pipe(res);
 
         } catch (error) {
             console.log(error)
-            res.json({ message: "F" })
+            res.status(500).json({ message: "Ocurrió un error con el audio" });
         }
     }
 
@@ -127,7 +87,7 @@ export default class audio {
                         res.sendFile(path.resolve(filename), err => {
                             if (err) {
                                 console.log(err);
-                                res.status(500).json({ message: "Ocurrio un error con el audio" });
+                                res.status(500).json({ message: "Ocurrió un error con el audio" });
                             }
                             download._destroy()
                             fs.unlink(path.resolve(filename), err => {
@@ -148,7 +108,7 @@ export default class audio {
                             console.log(err.message);
                             console.log("stdout:\n" + stdout);
                             console.log("stderr:\n" + stderr);
-                            res.status(500).json({ message: "Ocurrio un error con el audio" });
+                            res.status(500).json({ message: "Ocurrió un error con el audio" });
                             download._destroy()
                             stream.kill()
                             fs.unlink(path.resolve(filename), err => {
@@ -168,7 +128,7 @@ export default class audio {
 
         } catch (error) {
             console.log(error)
-            res.status(500).json({ message: "Ocurrio un error con el audio" });
+            res.status(500).json({ message: "Ocurrió un error con el audio" });
         }
     }
 }
