@@ -45,7 +45,7 @@ function XD() {
                     <Typography sx={{ textAlign: "center" }} variant='h5'>
                         3
                     </Typography>
-                    <TextField required margin="normal" error={tercero !== 'dhr'} helperText="Toca al kirbo 30 veces y te dira un secreto" value={tercero} onChange={e => setTercero(e.target.value)} />
+                    <TextField required margin="normal" error={tercero !== 'dhr'} helperText="Toca al kirbo 10 veces y te dira un secreto" value={tercero} onChange={e => setTercero(e.target.value)} />
                 </Grid>
                 <Grid item>
                     <Typography sx={{ textAlign: "center" }} variant='h5'>

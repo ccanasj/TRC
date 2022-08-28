@@ -5,12 +5,13 @@ import Typography from '@mui/material/Typography';
 function WhackAMole() {
 
     const [score, setScore] = useState(0);
-    const [time, setTime] = useState(45);
+    const [time, setTime] = useState(15);
     const [hitPosition, setHitPosition] = useState(0);
     const [holes, setHoles] = useState([]);
 
     useEffect(() => {
 
+        let interval = null
         let randomMole = null
 
         const squares = [{
@@ -49,7 +50,7 @@ function WhackAMole() {
                 square.mole = false
             })
 
-            setTime(time - 1)
+
 
             let randomSquare = squares[Math.floor(Math.random() * 9)]
             randomSquare.mole = true
@@ -57,15 +58,17 @@ function WhackAMole() {
             setHitPosition(randomSquare.id)
         }
 
-
-
         if (time > 0) {
-            randomMole = setInterval(randomSquare, 1000);
+            interval = setInterval(() => setTime(time - 1), 1000);
+            randomMole = setInterval(randomSquare, 800);
+            
         } else {
+            clearInterval(interval)
             clearInterval(randomMole)
         }
 
         return () => {
+            clearInterval(interval);
             clearInterval(randomMole);
         };
 
@@ -84,9 +87,9 @@ function WhackAMole() {
                 <h2 className="App-header" style={{ textAlign: "center" }}>Puntaje: {score}</h2>
 
                 <h2 className="App-header" style={{ textAlign: "center" }}>Tiempo restante: {time}</h2>
-                {score >= 30 ?
+                {score >= 10 ?
                     <Typography variant='h5' style={{ textAlign: "center" }}>
-                        El kirbo murio y solto una nota "dhr" Posdata:'Poyo'
+                        El kirbo murio y solto una nota con un codigo:"dhr" Posdata:'Poyo'
                     </Typography> : null}
 
             </Grid>

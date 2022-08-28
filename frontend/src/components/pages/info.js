@@ -21,11 +21,13 @@ import Snackbar from '@mui/material/Snackbar';
 import LinearProgress from '@mui/material/LinearProgress'
 import Stack from '@mui/material/Stack';
 // import Switch from '@mui/material/Switch';
+// import Divider from '@mui/material/Divider';
 
 import Canvas from "../Canvas.js";
 import Ruleta from "../games/ruleta.js";
 import YoutubeAudio from "../../services/audio.js";
 import { ReactComponent as Paste } from '../../Paste.svg';
+import { ReactComponent as ArrowDown } from '../../ArrowDown.svg';
 
 const minDistance = 30;
 
@@ -49,6 +51,7 @@ function Info() {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState(0);
   const [wheel, setWheel] = useState(false);
+  // const [directDownload, setDirectDownload] = useState(false);
   const download = useRef(null);
 
   useEffect(() => {
@@ -62,6 +65,7 @@ function Info() {
   async function sendURL() {
     const req = { url: url };
     console.log(req)
+    // if (!directDownload) {
     YoutubeAudio.audioInfo(req).then(response => {
       console.log(response.data);
       setTitle(response.data.title)
@@ -74,6 +78,14 @@ function Info() {
       setAlertMessage(e.response.data.message)
       setOpen(true)
     });
+    // } else {
+    //   YoutubeAudio.downloadAudio(req).then(response => {
+    //     console.log(response);
+    //   }).catch(e => {
+    //     setAlertMessage('Ah ocurrido un error descargando el audio, intentalo de nuevo')
+    //     setOpen(true)
+    //   });
+    // }
   }
 
   function sleep(ms) {
@@ -97,7 +109,7 @@ function Info() {
     console.log(req)
     setLoading(true)
     setValue(0)
-    YoutubeAudio.downloadAudio(req).then(async (response) => {
+    YoutubeAudio.downloadAudioMetadata(req).then(async (response) => {
       console.log(response);
       const objectURL = URL.createObjectURL(response.data);
       setBlob(objectURL)
@@ -201,10 +213,11 @@ function Info() {
           Ingresa el link de youtube de la canción
         </h1>
         <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setUrl(await navigator.clipboard.readText())}><Paste /></IconButton>) }} value={url} onChange={e => setUrl(e.target.value)} />
-        {/* <Typography variant='h5'>
-          ¿Quieres poner metadatos a la canción? 
+        {/* <Typography variant='h6' align="center">
+          ¿Descargar directamente?
         </Typography>
-        <Switch defaultChecked /> */}
+        <Switch disabled={loading} checked={directDownload} onChange={e => setDirectDownload(e.target.checked)} />
+        <Divider sx={{ m: 3 }} flexItem /> */}
         <Button disabled={loading} variant="contained" sx={{ bgcolor: "#94440C" }} onClick={sendURL}>
           Enviar
         </Button>
@@ -217,7 +230,7 @@ function Info() {
           <Grid container alignItems="center"
             justifyContent="center" item>
             <Accordion defaultExpanded={true} sx={{ width: "97%", border: 1 }}>
-              <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }}>
+              <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }} expandIcon={<ArrowDown />}>
                 <Typography sx={{ color: "white" }}>Opciones generales</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -226,15 +239,15 @@ function Info() {
                     {title}
                   </Typography>
                 </Grid>
-                <Grid container direction="row" item>
+                <Grid container direction={{ xs: 'column', sm: 'row' }} item>
                   <Grid container border={3} xs alignItems="center" justifyContent="center" item direction="column" component="form" autoComplete="off" noValidate>
-                    <TextField disabled={loading} required margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: "80%" }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setTitle(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
-                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: "80%" }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setArtist(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
-                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: "80%" }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                    <TextField disabled={loading} required error={!title} margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setTitle(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setArtist(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
                   </Grid>
                   <Grid item border={3} xs={4}>
                     <Typography variant='h6' align="center">
-                      Palabras clave (Dale click en el botón para copiar)
+                      Palabras clave (Click para copiar)
                     </Typography>
                     <List style={{ maxHeight: 250, overflow: 'auto' }} >
                       {keywords.map((value) => (
@@ -258,7 +271,7 @@ function Info() {
           <Grid container alignItems="center"
             justifyContent="center" item>
             <Accordion sx={{ width: "97%", border: 1 }}>
-              <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }}>
+              <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }} expandIcon={<ArrowDown />}>
                 <Typography sx={{ color: "white" }}>Opciones avanzadas</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -290,6 +303,18 @@ function Info() {
                 </Typography>
                 <Grid padding={2} container alignItems="center" justifyContent="space-between" item>
                   <Stack>
+                  <Grid alignItems="center" container item>
+                      <Radio
+                        checked={quality === '320'}
+                        onChange={e => setQuality(e.target.value)}
+                        disabled={loading}
+                        value={'320'} />
+                      <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="La mayor calidad para un archivo MP3 (Tarda más en descargar y el archivo pesa más)">
+                        <Typography>
+                          Máxima calidad (320kbps)
+                        </Typography>
+                      </Tooltip>
+                    </Grid>
                     <Grid alignItems="center" container item>
                       <Radio
                         checked={quality === '192'}
@@ -298,7 +323,7 @@ function Info() {
                         value={'192'} />
                       <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Entre mayor la calidad mejor se escuchara el audio pero sera mas pesado el archivo (Tarda más en descargar)">
                         <Typography>
-                          Mayor calidad (192kbs)
+                          Mayor calidad (192kbps)
                         </Typography>
                       </Tooltip>
                     </Grid>
@@ -310,7 +335,7 @@ function Info() {
                         value={'128'} />
                       <Tooltip disableFocusListener disableTouchListener arrow leaveDelay={300} placement="right" title="Calidad normal">
                         <Typography>
-                          Calidad normal (128kbs)
+                          Calidad normal (128kbps)
                         </Typography>
                       </Tooltip>
                     </Grid>
@@ -323,7 +348,7 @@ function Info() {
                         value={'64'} />
                       <Tooltip disableFocusListener disableTouchListener arrow placement="right" title="La menor calidad de audio, pero menos pesado">
                         <Typography>
-                          Menor calidad (64kbs)
+                          Menor calidad (64kbps)
                         </Typography>
                       </Tooltip>
                     </Grid>
@@ -364,7 +389,7 @@ function Info() {
                     Subir imagen de portada
                     <input hidden accept="image/*" type="file" onChange={getImage} />
                   </Button>
-                  <TextField disabled={loading} label="Url imagen o pega aqui la imagen copiada" margin="normal" sx={{ bgcolor: "#ffffff", width: "80%" }} onChange={e => setImage(e.target.value)} />
+                  <TextField disabled={loading} label="Url imagen o pega aqui la imagen copiada" margin="normal" sx={{ bgcolor: "#ffffff", width: { xs: "100%", sm: "80%" } }} onChange={e => setImage(e.target.value)} />
                 </Grid>
               </AccordionDetails>
             </Accordion>

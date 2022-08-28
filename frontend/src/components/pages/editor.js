@@ -7,7 +7,7 @@ import WIP from "../WIP";
 function Editor() {
   return (
     <Box>
-      <WIP text="Proximamente se implementara un editor de metadata de MP3."/>
+      <WIP text="Próximamente se implementara un editor de metadata de MP3."/>
       <MemoryGame />
     </Box>
   );

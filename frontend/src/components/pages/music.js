@@ -7,7 +7,7 @@ import WIP from "../WIP";
 function Music() {
   return (
     <Box>
-      <WIP text="Proximamente se implementara un reproductor? de musica o algo parecido xd" />
+      <WIP text="Próximamente se implementara un reproductor? de música o algo parecido xd" />
       <WhackAMole />
     </Box>
   );

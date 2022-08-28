@@ -42,7 +42,7 @@ const Canvas = props => {
 
     }, [image,onChange])
 
-    return <canvas ref={canvasRef} {...rest} />
+    return <canvas ref={canvasRef} style={{border: "10px solid", margin: 10}} {...rest} />
 }
 
 export default Canvas

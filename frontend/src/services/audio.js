@@ -5,8 +5,12 @@ class YoutubeAudio {
         return axios.post("/audioInfo", data)
     }
 
-    downloadAudio(data){
+    downloadAudioMetadata(data){
         return axios.post("/downloadWriter", data, {responseType: 'blob'})
+    }
+
+    downloadAudio(data){
+        return axios.post("/downloadAudio", data, {responseType: 'blob'})
     }
 
     getImage(data){
