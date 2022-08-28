@@ -1,31 +1,45 @@
 version: "3.2"
 services:
-  front:
-    image: robacion_frontend:1.0.1
-    build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+  # front:
+  #   image: robacion_frontend:1.0.1
+  #   build:
+  #     context: .
+  #     dockerfile: ./frontend/Dockerfile
+  #   ports:
+  #   - 80:80
+  #   - 443:443
+  #   expose:
+  #   - "80"
+  #   - "443"
+  #   networks:
+  #     - robacion_net
+  #   restart: always
+  #   volumes:
+  #     - ./nginx/conf/:/etc/nginx/conf.d/:ro
+  #     - ./certbot/www:/var/www/certbot/:ro
+  #     - ./certbot/conf/:/etc/nginx/ssl/:ro
+  #   environment:
+  #       NODE_ENV: production
+  #       PORT: 80
+  #       HOST: 0.0.0.0
+
+  webserver:
+    image: nginx:latest
     ports:
-    - 80:80
-    - 443:443
-    expose:
-    - "80"
-    - "443"
-    networks:
-      - robacion_net
+      - 80:80
+      - 443:443
     restart: always
     volumes:
       - ./nginx/conf/:/etc/nginx/conf.d/:ro
       - ./certbot/www:/var/www/certbot/:ro
-    environment:
-        NODE_ENV: production
-        PORT: 80
-        HOST: 0.0.0.0
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+
   certbot:
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
+  
   backend:
     image: robacion_backend:1.0.1
     build:
