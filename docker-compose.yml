@@ -1,5 +1,15 @@
 version: "3.2"
 services:
+  webserver:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
   # front:
   #   image: robacion_frontend:1.0.1
   #   build:
@@ -23,40 +33,29 @@ services:
   #       PORT: 80
   #       HOST: 0.0.0.0
 
-  webserver:
-    image: nginx:latest
-    ports:
-      - 80:80
-      - 443:443
-    restart: always
-    volumes:
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
-      - ./certbot/www:/var/www/certbot/:ro
-      - ./certbot/conf/:/etc/nginx/ssl/:ro
-
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
+#   certbot:
+#     image: certbot/certbot:latest
+#     volumes:
+#       - ./certbot/www/:/var/www/certbot/:rw
+#       - ./certbot/conf/:/etc/letsencrypt/:rw
   
-  backend:
-    image: robacion_backend:1.0.1
-    build:
-      context: .
-      dockerfile: ./backend/Dockerfile
-    ports:
-    - 5000:5000
-    expose:
-    - "5000"
-    networks:
-      - robacion_net
-    restart: always
-    environment:
-        NODE_ENV: production
-        PORT: 5000
-        HOST: 0.0.0.0
+#   backend:
+#     image: robacion_backend:1.0.1
+#     build:
+#       context: .
+#       dockerfile: ./backend/Dockerfile
+#     ports:
+#     - 5000:5000
+#     expose:
+#     - "5000"
+#     networks:
+#       - robacion_net
+#     restart: always
+#     environment:
+#         NODE_ENV: production
+#         PORT: 5000
+#         HOST: 0.0.0.0
 
-networks:
-  robacion_net:
-    driver: bridge
+# networks:
+#   robacion_net:
+#     driver: bridge
