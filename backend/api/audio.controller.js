@@ -10,7 +10,14 @@ export default class audio {
         try {
             const videoUrl = req.body.url
             if (ytdl.validateURL(videoUrl)) {
-                const basic = await ytdl.getBasicInfo(videoUrl);
+                const COOKIE = "GPS=1; YSC=bA5l_nKB5wg; VISITOR_INFO1_LIVE=p8Qt9mhSxu0; PREF=tz=America.Bogota&f6=40000000; CONSISTENCY=AGXVzq_6pYSke-EqKtQgyLkAq2wTPEoGmIndCwcaP5w-WDDsKL02q-H-fNUy7V9TvUB4gXbNtc7JkCK1RxLOROST44rcs9Y67S5G4I-qkHzB78fk6TrNtdtfRUS8ARMnKhUrKLk1TQAJ-g2FCU3dkNg"
+                const basic = await ytdl.getBasicInfo(videoUrl, {
+                    requestOptions: {
+                        headers: {
+                            cookie: COOKIE
+                        }
+                    }
+                });
 
                 if (!basic.player_response.videoDetails.isLiveContent && Number(basic.player_response.videoDetails.lengthSeconds) <= 600 && Number(basic.player_response.videoDetails.lengthSeconds) >= 30) {
 
@@ -46,7 +53,15 @@ export default class audio {
     static async downloadWriter(req, res, next) {
         try {
             const videoUrl = req.body.id;
-            const download = ytdl(videoUrl, { quality: 'lowestaudio' });
+            const COOKIE = "GPS=1; YSC=bA5l_nKB5wg; VISITOR_INFO1_LIVE=p8Qt9mhSxu0; PREF=tz=America.Bogota&f6=40000000; CONSISTENCY=AGXVzq_6pYSke-EqKtQgyLkAq2wTPEoGmIndCwcaP5w-WDDsKL02q-H-fNUy7V9TvUB4gXbNtc7JkCK1RxLOROST44rcs9Y67S5G4I-qkHzB78fk6TrNtdtfRUS8ARMnKhUrKLk1TQAJ-g2FCU3dkNg"
+            const download = ytdl(videoUrl, {
+                quality: 'lowestaudio',
+                requestOptions: {
+                    headers: {
+                        cookie: COOKIE
+                    }
+                }
+            });
 
             const name = crypto.randomUUID();
 
@@ -73,16 +88,16 @@ export default class audio {
                         .duration(req.body.seconds[1] - req.body.seconds[0])
                         .save(filename);
                     const filters = []
-                    if(req.body.removeSilence){
+                    if (req.body.removeSilence) {
                         filters.push("silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-40dB")
                     }
                     if (req.body.normLoud) {
                         filters.push("loudnorm")
                     }
-                    if(filters.length){
+                    if (filters.length) {
                         stream.audioFilters(...filters)
                     }
-                    
+
 
                     stream.on('end', () => {
                         res.sendFile(path.resolve(filename), err => {
