@@ -3,6 +3,7 @@ import fs from "fs";
 import FFmpegStatic from "ffmpeg-static";
 import ffmpeg from 'fluent-ffmpeg';
 import path from "path";
+import crypto from "crypto"
 
 export default class audio {
     static async getAudio(req, res, next) {
@@ -47,7 +48,7 @@ export default class audio {
             const videoUrl = req.body.id;
             const download = ytdl(videoUrl, { quality: 'lowestaudio' });
 
-            const name = req.body.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            const name = crypto.randomUUID();
 
             const filename = `./audio/${name}.temp.mp3`;
 

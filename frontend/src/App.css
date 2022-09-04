@@ -1,13 +1,15 @@
 .App {
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Bahnschrift", "Arial Narrow", Arial, sans-serif;
   height: 100%;
   width: 100%;
+  background-color: #fff6eb;
 }
 
 .App-header {
-  font-size: calc(10px + 2vmin);
+  font-family: "Bahnschrift";
+  text-align: center;
+  font-size: calc(20px + 2vmin);
 }
-
 
 .naraja {
   color: #c55a10;

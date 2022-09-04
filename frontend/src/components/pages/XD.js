@@ -5,6 +5,8 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from "@mui/material/TextField";
 
+import WIP from "../WIP";
+
 function XD() {
 
     const [primero, setPrimero] = useState('');
@@ -13,7 +15,7 @@ function XD() {
     const [cuarto, setCuarto] = useState('');
     const [quinto, setQuinto] = useState('');
     const [success, setSuccess] = useState(false);
-    
+
     function checkSecret() {
         if ((primero + segundo + tercero + cuarto + quinto) === "Chgbrydhrybyrn") {
             setSuccess(true)
@@ -24,8 +26,12 @@ function XD() {
 
     return (
         <div>
+            <WIP text="Próximamente las tendencias musicales" />
+            <Typography sx={{ color: "#fff6eb" }}>
+                Código: "yrn"
+            </Typography>
             <Typography sx={{ textAlign: "center" }} margin={1} variant='h5'>
-                ¿Que sera esto?
+                Encuentra el codigo secreto
             </Typography>
             <Grid padding={5} direction="row" alignItems="center" justifyContent="space-evenly" container spacing={2} >
                 <Grid item>
@@ -57,7 +63,7 @@ function XD() {
                     <Typography sx={{ textAlign: "center" }} variant='h5'>
                         5
                     </Typography>
-                    <TextField required margin="normal" error={quinto !== 'yrn'} helperText="En el inicio, oculto de tus ojos" value={quinto} onChange={e => setQuinto(e.target.value)} />
+                    <TextField required margin="normal" error={quinto !== 'yrn'} helperText="oculto de tus ojos" value={quinto} onChange={e => setQuinto(e.target.value)} />
                 </Grid>
             </Grid >
             <Grid alignItems="center" justifyContent="center" container>

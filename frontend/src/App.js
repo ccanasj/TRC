@@ -11,11 +11,16 @@ import XD from "./components/pages/XD";
 import NavBar from "./components/navBar";
 import Footer from "./components/footer";
 import NotFound from "./components/pages/notFound";
+import About from "./components/pages/about";
 
-let theme = createTheme({
+const theme = createTheme({
   typography: {
-    fontFamily: 'Trebuchet MS',
-  },
+    "fontFamily": `"Bahnschrift", "Arial", "sans-serif"`,
+    h1:{
+      "fontFamily": `"MingLiU"`,
+    }
+    
+  }
 });
 
 
@@ -30,6 +35,7 @@ function App() {
           <Route path="/edit" element={<Editor />}></Route>
           <Route path="/music" element={<Music />}></Route>
           <Route path="/XD" element={<XD />}></Route>
+          <Route path="/about" element={<About />}></Route>
         </Routes>
         <Footer />
       </div>

@@ -166,11 +166,13 @@ function Info() {
   };
 
   const copy = async (e) => {
-    //console.log(await navigator.clipboard.readText())
     await navigator.clipboard.writeText(e.target.innerText);
   }
 
   function pasteImage(event) {
+    if (loading) {
+      return
+    }
     // use event.originalEvent.clipboard for newer chrome versions
     var items = (event.clipboardData || event.originalEvent.clipboardData).items;
     // find pasted image among pasted items
@@ -191,28 +193,23 @@ function Info() {
   }
 
   return (
-    <Box sx={{ border: 10, borderTop: 0, borderBottom: 0 }}>
-      <Typography sx={{ color: "white" }}>
-        Código: "yrn"
-      </Typography>
+    <Box sx={{ border: 10, borderTop: 1, borderBottom: 0 }}>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert variant="filled" severity="error" onClose={handleClose} sx={{ mb: 2 }}>
           {alertMessage}
         </Alert>
       </Snackbar>
-      <Grid component="form"
-        autoComplete="off"
+      <Grid
         container
         direction="column"
         alignItems="center"
         justifyContent="center"
-        noValidate
         color="#000000" sx={{ borderBottom: 10, margin: "1% auto", p: 1 }}>
 
         <h1 className="App-header">
-          Ingresa el link de youtube de la canción
+          Ingresa el link de la canción de YouTube
         </h1>
-        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setUrl(await navigator.clipboard.readText())}><Paste /></IconButton>) }} value={url} onChange={e => setUrl(e.target.value)} />
+        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} onKeyPress={e => { if (e.key === 'Enter') { sendURL(e) } }} InputProps={{ autoComplete: 'off', endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setUrl(await navigator.clipboard.readText())}><Paste /></IconButton>) }} value={url} onChange={e => setUrl(e.target.value)} />
         {/* <Typography variant='h6' align="center">
           ¿Descargar directamente?
         </Typography>
@@ -229,23 +226,23 @@ function Info() {
           spacing={2}>
           <Grid container alignItems="center"
             justifyContent="center" item>
-            <Accordion defaultExpanded={true} sx={{ width: "97%", border: 1 }}>
+            <Accordion defaultExpanded={true} sx={{ width: "97%", border: 1, backgroundColor: "#faf1e6" }}>
               <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }} expandIcon={<ArrowDown />}>
                 <Typography sx={{ color: "white" }}>Opciones generales</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Grid item>
-                  <Typography variant='h5'>
+                  <Typography variant='h5' style={{ fontFamily: "Impact" }}>
                     {title}
                   </Typography>
                 </Grid>
                 <Grid container direction={{ xs: 'column', sm: 'row' }} item>
-                  <Grid container border={3} xs alignItems="center" justifyContent="center" item direction="column" component="form" autoComplete="off" noValidate>
-                    <TextField disabled={loading} required error={!title} margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setTitle(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
-                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setArtist(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
-                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton aria-label="paste" onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                  <Grid container border={3} xs sx={{ boxShadow: 3 }} alignItems="center" justifyContent="center" item direction="column" component="form" autoComplete="off" noValidate>
+                    <TextField disabled={loading} required error={!title} margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setTitle(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setArtist(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
                   </Grid>
-                  <Grid item border={3} xs={4}>
+                  <Grid item border={3} xs={4} sx={{ boxShadow: 3 }}>
                     <Typography variant='h6' align="center">
                       Palabras clave (Click para copiar)
                     </Typography>
@@ -260,7 +257,7 @@ function Info() {
                     </List>
                   </Grid>
                 </Grid>
-                <Grid padding={1} container alignItems="center" justifyContent="center" item>
+                <Grid padding={2} container alignItems="center" justifyContent="center" item>
                   <Button disabled={loading} href={`https://musicbrainz.org/search?query=${title}+${artist}&type=recording&limit=25&method=indexed`} target="_blank" variant="contained" sx={{ bgcolor: "#94440C", textTransform: "capitalize" }}>
                     Buscar más información
                   </Button>
@@ -270,12 +267,12 @@ function Info() {
           </Grid>
           <Grid container alignItems="center"
             justifyContent="center" item>
-            <Accordion sx={{ width: "97%", border: 1 }}>
+            <Accordion sx={{ width: "97%", border: 1, backgroundColor: "#faf1e6" }}>
               <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }} expandIcon={<ArrowDown />}>
                 <Typography sx={{ color: "white" }}>Opciones avanzadas</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Grid container border={3} direction="column" alignItems="center" justifyContent="center" item>
+                <Grid sx={{ boxShadow: 3 }} container border={3} direction="column" alignItems="center" justifyContent="center" item>
                   <Typography variant='h5' align="center">
                     Tiempo inicio - duración del audio
                   </Typography>
@@ -298,12 +295,12 @@ function Info() {
                     El audio tiene una duración de {fancyTime(seconds[1] - seconds[0])}
                   </Typography>
                 </Grid>
-                <Typography variant='h5' align="center">
+                <Typography variant='h5' align="center" padding={1}>
                   Calidad del audio
                 </Typography>
                 <Grid padding={2} container alignItems="center" justifyContent="space-between" item>
                   <Stack>
-                  <Grid alignItems="center" container item>
+                    <Grid alignItems="center" container item>
                       <Radio
                         checked={quality === '320'}
                         onChange={e => setQuality(e.target.value)}
@@ -383,13 +380,18 @@ function Info() {
                 <Typography variant='h5' align="center">
                   Álbum cover
                 </Typography>
-                <Grid border={3} padding={2} sx={{ overflow: "hidden" }} justifyContent="space-evenly" alignItems="center" container item onPaste={pasteImage}>
+                <Grid border={3} padding={2} sx={{ overflow: "hidden", boxShadow: 3 }} justifyContent="space-evenly" alignItems="center" container item onPaste={pasteImage}>
                   <Canvas image={image} onChange={setImage} />
                   <Button disabled={loading} variant="contained" component="label" >
                     Subir imagen de portada
                     <input hidden accept="image/*" type="file" onChange={getImage} />
                   </Button>
-                  <TextField disabled={loading} label="Url imagen o pega aqui la imagen copiada" margin="normal" sx={{ bgcolor: "#ffffff", width: { xs: "100%", sm: "80%" } }} onChange={e => setImage(e.target.value)} />
+                  <Grid xs={15} padding={2} justifyContent="space-evenly" alignItems="center" container>
+                    <Typography variant='h5'>
+                      Url de la imagen o pegar imagen (Ctrl + v)
+                    </Typography>
+                    <TextField disabled={loading} label="Url imagen" margin="normal" sx={{ bgcolor: "#ffffff", width: { xs: "100%", sm: "85%" } }} InputProps={{ autoComplete: 'off', endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setImage(await navigator.clipboard.readText())}><Paste /></IconButton>) }} onChange={e => setImage(e.target.value)} />
+                  </Grid>
                 </Grid>
               </AccordionDetails>
             </Accordion>
