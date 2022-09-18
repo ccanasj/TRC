@@ -104,6 +104,7 @@ const presets = [
       ledBars: false,
       lumiBars: false,
       radial: false,
+      showScaleX: false,
       minDecibels: -70,
       maxFreq: 32000,
       height: 450,
@@ -144,7 +145,7 @@ function Player() {
   const [paused, setPaused] = useState(true);
   const [muted, setMuted] = useState(false);
   const [audio, setAudio] = useState(new Audio());
-  const [option, setOption] = useState(1);
+  const [option, setOption] = useState(5);
   const [color, setColor] = useState(getRandomColor());
   const [audioMotion, setAudioMotion] = useState(null);
   const [time, setTime] = useState(0);
@@ -186,7 +187,7 @@ function Player() {
       }
     )
     obj.registerGradient('TRC', Gradientoptions);
-    obj.setOptions(presets[0].options)
+    obj.setOptions(presets[4].options)
     setAudioMotion(obj)
   }, [audio]);
 
@@ -388,7 +389,7 @@ function Player() {
             }
           </Grid> : null
         }
-        <Grid container direction={{ xs: 'column', sm: 'row' }} padding={2} item>
+        <Grid container direction={{ xs: 'column-reverse', sm: 'row' }} padding={2} item>
           <Grid container xs direction="column" alignItems="center" justifyContent="center" item>
             <Typography align="center" sx={{ m: 1, wordBreak: 'break-all' }}>
               {fileName}

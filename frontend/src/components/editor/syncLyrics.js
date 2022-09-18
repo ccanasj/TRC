@@ -52,7 +52,7 @@ function SyncLyrics({ lyrics, setLyrics, source, setOpen }) {
     }
 
     function fancyTime(time) {
-        return Math.floor(time % 3600 / 60).toString().padStart(2, '0') + ((time % 60) >= 10 ? ':' : ':0') + ((time % 60) - (time > 1 ? 1 : 0)).toFixed(3).toString()
+        return Math.floor(time % 3600 / 60).toString() + ((time % 60) >= 10 ? ':' : ':0') + ((time % 60) + (time > 1 ? - 1 : 0)).toFixed(3).toString()
     }
 
     useEffect(() => {
