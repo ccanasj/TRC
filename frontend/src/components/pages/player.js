@@ -304,13 +304,15 @@ function Player() {
   }
 
   function displayLyric(line, nextLine) {
-    const nextTimestamp = Number(nextLine.substring(0, nextLine.indexOf(' '))) <= time
-    const text = line.substring(line.indexOf(' ') + 1)
-    if (nextTimestamp) {
-      setLyricLine(lyricLine + 1)
-      setColor(getRandomColor())
+    if (nextLine) {
+      const nextTimestamp = Number(nextLine.substring(0, nextLine.indexOf(' '))) <= time
+      const text = line.substring(line.indexOf(' ') + 1)
+      if (nextTimestamp) {
+        setLyricLine(lyricLine + 1)
+        setColor(getRandomColor())
+      }
+      return text
     }
-    return text
   }
 
   function getRandomColor() {

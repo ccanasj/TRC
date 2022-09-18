@@ -19,18 +19,22 @@ import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import LinearProgress from '@mui/material/LinearProgress'
 import Stack from '@mui/material/Stack';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import UploadRoundedIcon from '@mui/icons-material/UploadRounded';
+import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 
 import Canvas from "../downloader/canvas.js";
+import SearchResults from "../downloader/searchResults.js";
 // import Ruleta from "../games/ruleta.js";
 import YoutubeAudio from "../../services/audio.js";
 
-const minDistance = 30;
+const minDistance = 20;
 
 function Downloader() {
 
@@ -51,6 +55,7 @@ function Downloader() {
   const [alertMessage, setAlertMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState(0);
+  const [tab, setTab] = useState(0);
   // const [wheel, setWheel] = useState(false);
   // const [directDownload, setDirectDownload] = useState(false);
   const download = useRef(null);
@@ -63,7 +68,7 @@ function Downloader() {
     };
   }, [value]);
 
-  async function sendURL() {
+  function sendURL() {
     const req = { url: url };
     // console.log(req)
     // if (!directDownload) {
@@ -177,6 +182,7 @@ function Downloader() {
     // use event.originalEvent.clipboard for newer chrome versions
     var items = (event.clipboardData || event.originalEvent.clipboardData).items;
     // find pasted image among pasted items
+    console.log(items)
     var blob = null;
     for (var i = 0; i < items.length; i++) {
       if (items[i].type.indexOf("image") === 0) {
@@ -205,25 +211,39 @@ function Downloader() {
         direction="column"
         alignItems="center"
         justifyContent="center" padding={1}>
-
-        <h1 className="App-header">
-          Ingresa el link de la canción de YouTube
-        </h1>
-        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} onKeyPress={e => { if (e.key === 'Enter') { sendURL(e) } }} InputProps={{ autoComplete: 'off', endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setUrl(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} value={url} onChange={e => setUrl(e.target.value)} />
+        <Box sx={{ borderBottom: 1, borderColor: 'divider'}}>
+          <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} variant="fullWidth" centered>
+            <Tab sx={{ color: 'black' }} label="Buscador" icon={<SearchIcon />} iconPosition="start" />
+            <Tab sx={{ color: 'black' }} label="Link" icon={<LinkRoundedIcon />} iconPosition="end" />
+          </Tabs>
+        </Box>
+        <SearchResults tab={tab} setTab={setTab} loading={loading} onSelect={setUrl} alertOpen={setOpen} alertText={setAlertMessage} />
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          sx={tab === 1 ? {} : { display: "none" }}>
+          <h1 className="App-header">
+            Ingresa el link de la canción de YouTube
+          </h1>
+          <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} onKeyPress={e => { if (e.key === 'Enter') { sendURL(e) } }} InputProps={{ autoComplete: 'off', endAdornment: (<IconButton disabled={loading} onClick={async (e) => setUrl(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} value={url} onChange={e => setUrl(e.target.value)} />
+          <Button disabled={loading || !url} variant="contained" sx={{ bgcolor: "#94440C" }} onClick={sendURL}>
+            Enviar
+          </Button>
+        </Grid>
         {/* <Typography variant='h6' align="center">
           ¿Descargar directamente?
         </Typography>
         <Switch disabled={loading} checked={directDownload} onChange={e => setDirectDownload(e.target.checked)} />
         <Divider sx={{ m: 3 }} flexItem /> */}
-        <Button disabled={loading} variant="contained" sx={{ bgcolor: "#94440C" }} onClick={sendURL}>
-          Enviar
-        </Button>
       </Grid>
       {videoId ?
         <Grid container alignItems="center"
           justifyContent="center"
           direction="column"
-          spacing={2} padding={1}>
+          spacing={2} padding={1}
+          sx={tab === 1 ? {} : { display: "none" }}>
           <Grid container alignItems="center"
             justifyContent="center" item>
             <Accordion defaultExpanded={true} sx={{ width: "97%", border: 1, backgroundColor: "#faf1e6" }}>
@@ -238,9 +258,9 @@ function Downloader() {
                 </Grid>
                 <Grid container direction={{ xs: 'column', sm: 'row' }} item>
                   <Grid container border={3} xs sx={{ boxShadow: 3 }} alignItems="center" justifyContent="center" item direction="column" component="form" autoComplete="off" noValidate>
-                    <TextField disabled={loading} required error={!title} margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setTitle(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
-                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setArtist(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
-                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
+                    <TextField disabled={loading} required error={!title} margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} onClick={async (e) => setTitle(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} onClick={async (e) => setArtist(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
                   </Grid>
                   <Grid item border={3} xs={4} sx={{ boxShadow: 3 }}>
                     <Typography variant='h6' align="center">

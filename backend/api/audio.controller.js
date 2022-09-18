@@ -12,11 +12,11 @@ export default class audio {
             if (ytdl.validateURL(videoUrl)) {
                 const basic = await ytdl.getBasicInfo(videoUrl);
 
-                if (!basic.player_response.videoDetails.isLiveContent && Number(basic.player_response.videoDetails.lengthSeconds) <= 900 && Number(basic.player_response.videoDetails.lengthSeconds) >= 15) {
+                if (!basic.player_response.videoDetails.isLiveContent && Number(basic.player_response.videoDetails.lengthSeconds) <= 900 && Number(basic.player_response.videoDetails.lengthSeconds) >= 20) {
 
                     res.json(basic.player_response.videoDetails)
                 } else {
-                    res.status(400).json({ message: "El video no puede ser en vivo, debe ser mayor a 30 segundos y menor a 10 minutos" })
+                    res.status(400).json({ message: "El video no puede ser en vivo, debe ser mayor a 20 segundos y menor a 15 minutos" })
                 }
             } else {
                 res.status(400).json({ message: "Url invalida" })
