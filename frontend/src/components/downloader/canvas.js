@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import YoutubeAudio from "../services/audio.js";
+import YoutubeAudio from "../../services/audio.js";
 
 const Canvas = props => {
 
@@ -28,21 +28,21 @@ const Canvas = props => {
 
         if (image.startsWith('https://')) {
             const req = { url: image };
-            console.log(req)
+            // console.log(req)
             YoutubeAudio.getImage(req).then(response => {
-                console.log(response);
+                // console.log(response);
                 imageObj1.src = response.data
             }).catch(e => {
                 imageObj1.src = ''
-                console.log(e);
+                // console.log(e);
             });
         } else {
             imageObj1.src = image
         }
 
-    }, [image,onChange])
+    }, [image, onChange])
 
-    return <canvas ref={canvasRef} style={{border: "10px solid", margin: 10}} {...rest} />
+    return <canvas className='album-cover' ref={canvasRef} {...rest} />
 }
 
 export default Canvas

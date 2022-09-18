@@ -11,6 +11,36 @@
   font-size: calc(20px + 2vmin);
 }
 
+@media only screen and (max-width: 480px) {
+  .album-cover {
+    border: 5px solid;
+    margin: 10px;
+    width: 100%;
+  }
+  .album-cover-player {
+    border: 5px solid;
+    width: 100%;
+  }
+  .tutorial {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 481px) {
+  .album-cover {
+    border: 10px solid;
+    margin: 10px;
+    width: 30%;
+  }
+  .album-cover-player {
+    border: 10px solid;
+    width: 50%;
+  }
+  .tutorial {
+    width: 50%;
+  }
+}
+
 .naraja {
   color: #c55a10;
 }
@@ -20,55 +50,24 @@
 }
 
 .light-naraja {
-  color: #d46312;
+  color: #ff6a00;
 }
 
-.grid {
-  width: 650px;
-  height: 650px;
-  display: flex;
-  flex-wrap: wrap;
+.fade-item {
+  transition: 2s all ease-in-out;
+  opacity: 0;
 }
 
-.square {
-  height: 200px;
-  width: 200px;
-  border: solid black 3px;
+.fadein {
+  animation: fadeIn 0.9s 1;
+  animation-fill-mode: forwards;
 }
 
-.mole {
-  background-image: url("../public/images/Kirbo.png");
-  background-size: cover;
-}
-
-.secret {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  animation-name: movement;
-  animation-duration: 4s;
-  animation-iteration-count: infinite;
-}
-
-@keyframes movement {
+@keyframes fadeIn {
   0% {
-    left: 0px;
-    top: 0px;
-  }
-  25% {
-    left: 50%;
-    top: 50%;
-  }
-  50% {
-    left: 100%;
-    top: 100%;
-  }
-  75% {
-    left: 50%;
-    top: 50%;
+    opacity: 0;
   }
   100% {
-    left: 0px;
-    top: 0px;
+    opacity: 1;
   }
 }

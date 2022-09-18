@@ -17,6 +17,10 @@ class YoutubeAudio {
         return axios.post("/getImage", data)
     }
 
+    search(data){
+        return axios.post("/search", data)
+    }
+
 }
 
 export default new YoutubeAudio();

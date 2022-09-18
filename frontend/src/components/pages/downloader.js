@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react"
-//import axios from "axios";
 
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button';
@@ -20,18 +19,20 @@ import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import LinearProgress from '@mui/material/LinearProgress'
 import Stack from '@mui/material/Stack';
-// import Switch from '@mui/material/Switch';
-// import Divider from '@mui/material/Divider';
 
-import Canvas from "../Canvas.js";
-import Ruleta from "../games/ruleta.js";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import SearchIcon from '@mui/icons-material/Search';
+import UploadRoundedIcon from '@mui/icons-material/UploadRounded';
+
+import Canvas from "../downloader/canvas.js";
+// import Ruleta from "../games/ruleta.js";
 import YoutubeAudio from "../../services/audio.js";
-import { ReactComponent as Paste } from '../../Paste.svg';
-import { ReactComponent as ArrowDown } from '../../ArrowDown.svg';
 
 const minDistance = 30;
 
-function Info() {
+function Downloader() {
 
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');
@@ -50,7 +51,7 @@ function Info() {
   const [alertMessage, setAlertMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState(0);
-  const [wheel, setWheel] = useState(false);
+  // const [wheel, setWheel] = useState(false);
   // const [directDownload, setDirectDownload] = useState(false);
   const download = useRef(null);
 
@@ -64,7 +65,7 @@ function Info() {
 
   async function sendURL() {
     const req = { url: url };
-    console.log(req)
+    // console.log(req)
     // if (!directDownload) {
     YoutubeAudio.audioInfo(req).then(response => {
       console.log(response.data);
@@ -92,13 +93,13 @@ function Info() {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async function downloadAudio() {
+  function downloadAudio() {
 
     const req = {
       id: videoId,
       title: title,
       artist: artist,
-      album: album,
+      album: album ? album : title,
       seconds: seconds,
       quality: quality,
       normLoud: checked,
@@ -106,7 +107,7 @@ function Info() {
       image: image.split(',')[1]
     };
 
-    console.log(req)
+    // console.log(req)
     setLoading(true)
     setValue(0)
     YoutubeAudio.downloadAudioMetadata(req).then(async (response) => {
@@ -193,7 +194,7 @@ function Info() {
   }
 
   return (
-    <Box sx={{ border: 10, borderTop: 1, borderBottom: 0 }}>
+    <Box sx={{ border: 10, borderTop: 0, borderBottom: 0 }}>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert variant="filled" severity="error" onClose={handleClose} sx={{ mb: 2 }}>
           {alertMessage}
@@ -203,13 +204,12 @@ function Info() {
         container
         direction="column"
         alignItems="center"
-        justifyContent="center"
-        color="#000000" sx={{ borderBottom: 10, margin: "1% auto", p: 1 }}>
+        justifyContent="center" padding={1}>
 
         <h1 className="App-header">
           Ingresa el link de la canción de YouTube
         </h1>
-        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} onKeyPress={e => { if (e.key === 'Enter') { sendURL(e) } }} InputProps={{ autoComplete: 'off', endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setUrl(await navigator.clipboard.readText())}><Paste /></IconButton>) }} value={url} onChange={e => setUrl(e.target.value)} />
+        <TextField disabled={loading} required margin="normal" sx={{ bgcolor: "#ffffff", width: "90%" }} onKeyPress={e => { if (e.key === 'Enter') { sendURL(e) } }} InputProps={{ autoComplete: 'off', endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setUrl(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} value={url} onChange={e => setUrl(e.target.value)} />
         {/* <Typography variant='h6' align="center">
           ¿Descargar directamente?
         </Typography>
@@ -223,32 +223,32 @@ function Info() {
         <Grid container alignItems="center"
           justifyContent="center"
           direction="column"
-          spacing={2}>
+          spacing={2} padding={1}>
           <Grid container alignItems="center"
             justifyContent="center" item>
             <Accordion defaultExpanded={true} sx={{ width: "97%", border: 1, backgroundColor: "#faf1e6" }}>
-              <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }} expandIcon={<ArrowDown />}>
+              <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }} expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}>
                 <Typography sx={{ color: "white" }}>Opciones generales</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Grid item>
-                  <Typography variant='h5' style={{ fontFamily: "Impact" }}>
+                  <Typography variant='h5' style={{ fontFamily: "Impact", wordBreak: 'break-all' }}>
                     {title}
                   </Typography>
                 </Grid>
                 <Grid container direction={{ xs: 'column', sm: 'row' }} item>
                   <Grid container border={3} xs sx={{ boxShadow: 3 }} alignItems="center" justifyContent="center" item direction="column" component="form" autoComplete="off" noValidate>
-                    <TextField disabled={loading} required error={!title} margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setTitle(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
-                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setArtist(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
-                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><Paste /></IconButton>) }} />
+                    <TextField disabled={loading} required error={!title} margin="normal" label="Título" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={title} onChange={e => setTitle(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setTitle(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Artista" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={artist} onChange={e => setArtist(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setArtist(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
+                    <TextField disabled={loading} margin="normal" label="Álbum" sx={{ bgcolor: "#ffffff", width: { xs: "95%", sm: "80%" } }} value={album} onChange={e => setAlbum(e.target.value)} InputProps={{ endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setAlbum(await navigator.clipboard.readText())}><ContentPasteIcon /></IconButton>) }} />
                   </Grid>
                   <Grid item border={3} xs={4} sx={{ boxShadow: 3 }}>
                     <Typography variant='h6' align="center">
                       Palabras clave (Click para copiar)
                     </Typography>
                     <List style={{ maxHeight: 250, overflow: 'auto' }} >
-                      {keywords.map((value) => (
-                        <ListItem key={value} divider>
+                      {keywords.map((value, index) => (
+                        <ListItem key={index} divider>
                           <Button disabled={loading} variant="contained" sx={{ bgcolor: "#94440C", textTransform: "capitalize" }} onClick={copy}>
                             {value}
                           </Button>
@@ -258,7 +258,7 @@ function Info() {
                   </Grid>
                 </Grid>
                 <Grid padding={2} container alignItems="center" justifyContent="center" item>
-                  <Button disabled={loading} href={`https://musicbrainz.org/search?query=${title}+${artist}&type=recording&limit=25&method=indexed`} target="_blank" variant="contained" sx={{ bgcolor: "#94440C", textTransform: "capitalize" }}>
+                  <Button disabled={loading} href={`https://musicbrainz.org/search?query=${title}+${artist}&type=recording&limit=25&method=indexed`} target="_blank" variant="contained" sx={{ bgcolor: "#94440C", textTransform: "capitalize" }} startIcon={<SearchIcon />}>
                     Buscar más información
                   </Button>
                 </Grid>
@@ -268,7 +268,7 @@ function Info() {
           <Grid container alignItems="center"
             justifyContent="center" item>
             <Accordion sx={{ width: "97%", border: 1, backgroundColor: "#faf1e6" }}>
-              <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }} expandIcon={<ArrowDown />}>
+              <AccordionSummary sx={{ backgroundColor: "#d46312", borderBottom: 1 }} expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}>
                 <Typography sx={{ color: "white" }}>Opciones avanzadas</Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -380,23 +380,20 @@ function Info() {
                 <Typography variant='h5' align="center">
                   Álbum cover
                 </Typography>
-                <Grid border={3} padding={2} sx={{ overflow: "hidden", boxShadow: 3 }} justifyContent="space-evenly" alignItems="center" container item onPaste={pasteImage}>
+                <Grid border={3} padding={2} sx={{ boxShadow: 3 }} justifyContent="space-evenly" alignItems="center" container item onPaste={pasteImage}>
                   <Canvas image={image} onChange={setImage} />
-                  <Button disabled={loading} variant="contained" component="label" >
+                  <Button disabled={loading} variant="contained" component="label" style={{ textAlign: 'center', textTransform: "capitalize" }} endIcon={<UploadRoundedIcon />}>
                     Subir imagen de portada
                     <input hidden accept="image/*" type="file" onChange={getImage} />
                   </Button>
-                  <Grid xs={15} padding={2} justifyContent="space-evenly" alignItems="center" container>
-                    <Typography variant='h5'>
-                      Url de la imagen o pegar imagen (Ctrl + v)
-                    </Typography>
-                    <TextField disabled={loading} label="Url imagen" margin="normal" sx={{ bgcolor: "#ffffff", width: { xs: "100%", sm: "85%" } }} InputProps={{ autoComplete: 'off', endAdornment: (<IconButton disabled={loading} aria-label="paste" onClick={async (e) => setImage(await navigator.clipboard.readText())}><Paste /></IconButton>) }} onChange={e => setImage(e.target.value)} />
-                  </Grid>
+                  <Button variant="contained" sx={{ mt: { xs: 2, sm: 0 }, backgroundColor: 'black', color: 'white', textAlign: 'center', textTransform: "capitalize", ':hover': { backgroundColor: '#c55a10' } }} endIcon={<ContentPasteIcon />} disabled={loading} onClick={async (e) => setImage(await navigator.clipboard.readText())}>
+                    Pegar URL
+                  </Button>
                 </Grid>
               </AccordionDetails>
             </Accordion>
           </Grid>
-          <Grid alignItems="center" justifyContent="center" container item>
+          {/* <Grid alignItems="center" justifyContent="center" container item>
             <Checkbox
               checked={wheel}
               onChange={e => setWheel(e.target.checked)}
@@ -405,26 +402,26 @@ function Info() {
             <Typography>
               ¿Quieres Probar Suerte?
             </Typography>
-          </Grid>
+          </Grid> */}
           <Grid item>
-            <Button disabled={loading} variant="contained" sx={{ bgcolor: "#94440C" }} onClick={downloadAudio}>
+            <Button disabled={loading} variant="contained" sx={{ bgcolor: "#94440C" }} onClick={downloadAudio} endIcon={<DownloadRoundedIcon />}>
               Descargar
             </Button>
           </Grid>
           {loading ?
-            <Grid sx={{ width: '80%', color: '#d46312' }} item>
-              {wheel ? <Ruleta></Ruleta> : null}
+            <Grid sx={{ width: '80%', color: '#d46312' }} item padding={2}>
+              {/* {wheel ? <Ruleta></Ruleta> : null} */}
               <Typography variant='h6' align="center">
                 {value}
               </Typography>
               <LinearProgress color="inherit" />
             </Grid> : null
           }
-          <a ref={download} href={blob} download={`${title}.mp3`} style={{ visibility: "hidden" }}>No deverias de ver esto xddd</a>
+          <a ref={download} href={blob} download={`${title}.mp3`} hidden>No deverias de ver esto xddd</a>
         </Grid> : null
       }
     </Box >
   );
 }
 
-export default Info;
+export default Downloader;

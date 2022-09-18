@@ -31,7 +31,6 @@ const MemoryGame = props => {
 
         if (optionOneId.attributes.alt.value === optionTwoId.attributes.alt.value) {
             setMessage('Quiuvo pues bobo no ves que le diste al mismo cuadro')
-            console.log()
         } else if (optionOneId.attributes.name.value === optionTwoId.attributes.name.value) {
             setMessage('Piola xd')
             setCards(temp.filter(value => value.name !== optionOneId.attributes.name.value || value.name !== optionTwoId.attributes.name.value))

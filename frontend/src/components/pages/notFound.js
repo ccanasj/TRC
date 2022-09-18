@@ -35,8 +35,8 @@ function NotFound() {
             }}>Uy estare ciego o la pagina no existe, quien sabe</h3>
             <div style={{
                 margin: "-100px 0 0 -100px",
-                width: "200px",
-                height: "200px",
+                width: "300px",
+                height: "300px",
                 display: "block",
                 boxShadow: "0 0 0 9999em #000000f7",
                 opacity: 1,
@@ -54,8 +54,8 @@ function NotFound() {
                     top: "0px",
                     left: "0px",
                     boxShadow: "inset 0 0 40px 2px #000, 0 0 20px 4px rgba(13,13,10,0.2)"
-                }}></div></div>
-            <div className="secret">"yb"</div>
+                }}></div>
+            </div>
         </div >
     );
 }
