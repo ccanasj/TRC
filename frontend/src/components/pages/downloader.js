@@ -29,6 +29,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import UploadRoundedIcon from '@mui/icons-material/UploadRounded';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 
+import Trends from "../downloader/trends.js";
 import Canvas from "../downloader/canvas.js";
 import SearchResults from "../downloader/searchResults.js";
 // import Ruleta from "../games/ruleta.js";
@@ -211,13 +212,14 @@ function Downloader() {
         direction="column"
         alignItems="center"
         justifyContent="center" padding={1}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider'}}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} variant="fullWidth" centered>
             <Tab sx={{ color: 'black' }} label="Buscador" icon={<SearchIcon />} iconPosition="start" />
             <Tab sx={{ color: 'black' }} label="Link" icon={<LinkRoundedIcon />} iconPosition="end" />
           </Tabs>
         </Box>
         <SearchResults tab={tab} setTab={setTab} loading={loading} onSelect={setUrl} alertOpen={setOpen} alertText={setAlertMessage} />
+        <Trends tab={tab} setTab={setTab} onSelect={setUrl} />
         <Grid
           container
           direction="column"
