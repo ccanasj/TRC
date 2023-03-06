@@ -33,5 +33,5 @@ jobs:
           docker tag trc-frontend ${{ secrets.DOCKER_USERNAME }}/teerece:frontend
       - name: Publicar imagen Docker en Docker Hub
         run: |
-          docker push vasitos/teerece:backend
-          docker push vasitos/teerece:frontend
+          docker push ${{ secrets.DOCKER_USERNAME }}/teerece:backend
+          docker push ${{ secrets.DOCKER_USERNAME }}/teerece:frontend
