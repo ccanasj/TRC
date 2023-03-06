@@ -1,10 +1,7 @@
 version: "3.2"
 services:
-  front:
-    image: trc_frontend
-    build:
-      context: frontend
-      dockerfile: ./Dockerfile
+  frontend:
+    image: ccanasj/teerece:frontend
     ports:
     - 3000:80
     expose:
@@ -12,10 +9,7 @@ services:
     restart: always
   
   backend:
-    image: trc_backend
-    build:
-      context: backend
-      dockerfile: ./Dockerfile
+    image: ccanasj/teerece:backend
     ports:
     - 5000:5000
     expose:
