@@ -2,18 +2,16 @@ version: "3.2"
 services:
   frontend:
     image: ccanasj/teerece:frontend
+    container_name: trc-frontend
     ports:
-    - 3000:80
-    expose:
-    - "3000"
+      - 80:80
     restart: always
   
   backend:
     image: ccanasj/teerece:backend
+    container_name: trc-backend
     ports:
     - 5000:5000
-    expose:
-    - "5000"
     restart: always
     environment:
         NODE_ENV: production
