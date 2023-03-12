@@ -1,4 +1,4 @@
-import 'elastic-apm-node/start';
+import 'elastic-apm-node/start.js';
 import express from "express"
 import cors from "cors"
 

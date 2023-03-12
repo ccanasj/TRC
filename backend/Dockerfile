@@ -8,4 +8,4 @@ EXPOSE 5000
 RUN mkdir -p /usr/src/app/audio && mkdir -p /usr/src/app/img
 RUN chown -R node /usr/src/app
 USER node
-CMD ["node", "index.js"]
+CMD ["node", "-r", "elastic-apm-node/start", "index.js"]
