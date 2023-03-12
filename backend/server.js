@@ -1,8 +1,6 @@
-import apm from "elastic-apm-node"
+import 'elastic-apm-node/start';
 import express from "express"
 import cors from "cors"
-
-apm.start()
 
 import download from "./api/download.route.js"
 
