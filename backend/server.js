@@ -1,6 +1,8 @@
-const apm = require('elastic-apm-node').start()
+import apm from "elastic-apm-node"
 import express from "express"
 import cors from "cors"
+
+apm.start()
 
 import download from "./api/download.route.js"
 
