@@ -1,3 +1,4 @@
+const apm = require('elastic-apm-node').start()
 import express from "express"
 import cors from "cors"
 
